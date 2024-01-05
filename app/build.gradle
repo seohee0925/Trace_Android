@@ -5,7 +5,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-// local.properties 파일에서 API 키 값 불러오기
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 String mapsApiKey = properties.getProperty("MY_API_KEY")
@@ -29,6 +28,14 @@ android {
         manifestPlaceholders = [MY_API_KEY: mapsApiKey]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "NAVER_CLIENT_ID", properties['naver_client_id']
+        buildConfigField "String", "NAVER_CLIENT_SECRET", properties['naver_client_secret']
+        buildConfigField "String", "NAVER_CLIENT_NAME", properties['naver_client_name']
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
     }
 
     buildTypes {
@@ -56,7 +63,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    implementation 'com.navercorp.nid:oauth:5.9.0' // jdk 11
+//    implementation 'com.navercorp.nid:oauth-jdk8:5.9.0' // jdk 8
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:18.0.0")
-
 }
