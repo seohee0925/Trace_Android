@@ -1,3 +1,5 @@
+
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -5,10 +7,15 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
+String mapsApiKey = properties.getProperty("MY_API_KEY")
 
 android {
     namespace 'com.example.trace_android'
     compileSdk 34
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId "com.example.trace_android"
@@ -16,6 +23,9 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
+
+        // Manifest placeholders 설정
+        manifestPlaceholders = [MY_API_KEY: mapsApiKey]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "NAVER_CLIENT_ID", properties['naver_client_id']
@@ -55,5 +65,6 @@ dependencies {
 
     implementation 'com.navercorp.nid:oauth:5.9.0' // jdk 11
 //    implementation 'com.navercorp.nid:oauth-jdk8:5.9.0' // jdk 8
-
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:18.0.0")
 }
