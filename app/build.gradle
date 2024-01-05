@@ -1,11 +1,22 @@
+
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
 
+// local.properties 파일에서 API 키 값 불러오기
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+String mapsApiKey = properties.getProperty("MY_API_KEY")
+
 android {
     namespace 'com.example.trace_android'
     compileSdk 34
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId "com.example.trace_android"
@@ -13,6 +24,9 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
+
+        // Manifest placeholders 설정
+        manifestPlaceholders = [MY_API_KEY: mapsApiKey]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,4 +55,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:18.0.0")
+
 }
