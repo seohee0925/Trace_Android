@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.example.trace_android.databinding.ActivityEmailLoginBinding
 import com.example.trace_android.model.Member
 import com.example.trace_android.retrofit.MemberAPI
-import com.example.trace_android.retrofit.RetrofitService
 import java.util.logging.Level
 import java.util.logging.Logger
 
