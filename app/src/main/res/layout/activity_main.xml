@@ -19,5 +19,9 @@
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_navigation_menu"/>
+        app:menu="@menu/bottom_navigation_menu"
+        android:background="@color/black"
+        app:itemTextColor="@color/white"
+        app:itemIconSize="24dp"
+        app:labelVisibilityMode="labeled"/>
 </LinearLayout>
