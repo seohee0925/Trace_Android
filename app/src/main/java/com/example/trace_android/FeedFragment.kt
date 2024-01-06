@@ -18,9 +18,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FeedFragment : Fragment(), OnMapReadyCallback {
-
 
     private val REQUEST_ACCESS_FINE_LOCATION = 1000
     private lateinit var mMap: GoogleMap
@@ -43,6 +43,31 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = SupportMapFragment.newInstance()
         childFragmentManager.beginTransaction().replace(R.id.map_container, mapFragment).commit()
         mapFragment.getMapAsync(this)
+
+        // '내 위치로 돌아오기' 버튼 리스너 설정
+        view.findViewById<FloatingActionButton>(R.id.fab_my_location)?.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            val userLocation = LatLng(it.latitude, it.longitude)
+                            mMap.animateCamera(
+                                com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                                    userLocation,
+                                    20.0f
+                                )
+                            )
+                        }
+                    }
+            }
+        }
 
     }
 
@@ -88,7 +113,8 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
             return
         }
         mMap.isMyLocationEnabled = true
-        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = false
+        mMap.uiSettings.isCompassEnabled = true
 
         if (mapReady) {
             fusedLocationClient.lastLocation
