@@ -18,10 +18,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FeedFragment : Fragment(), OnMapReadyCallback {
-
 
     private val REQUEST_ACCESS_FINE_LOCATION = 1000
     private lateinit var mMap: GoogleMap
@@ -45,67 +45,102 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         childFragmentManager.beginTransaction().replace(R.id.map_container, mapFragment).commit()
         mapFragment.getMapAsync(this)
 
+        // '내 위치로 돌아오기' 버튼 리스너 설정
+        view.findViewById<FloatingActionButton>(R.id.fab_my_location)?.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            val userLocation = LatLng(it.latitude, it.longitude)
+                            mMap.animateCamera(
+                                com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                                    userLocation,
+                                    20.0f
+                                )
+                            )
+                        }
+                    }
+            }
+        }
+
+        // FAB 버튼 참조를 찾고 클릭 리스너를 설정합니다.
+        val fabAddTrace = view.findViewById<ExtendedFloatingActionButton>(R.id.fab_add_trace)
+        fabAddTrace.setOnClickListener {
+            // InputBottomSheetFragment 인스턴스를 생성하고 보여줍니다.
+            val inputBottomSheetFragment = InputBottomSheetFragment()
+            inputBottomSheetFragment.show(parentFragmentManager, inputBottomSheetFragment.tag)
+        }
+
     }
 
     // onMapReady에서 GoogleMap 객체를 초기화하고 사용자의 위치를 업데이트합니다.
+    // res/raw/map_style.json의 맵 스타일은 import합니다.
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mapReady = true
-        try {
-            // 맵 스타일 설정
-            val success = mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireContext(), R.string.map_style
-                )
-            )
 
+        setMapStyle()
+        enableMyLocation() // 현재 위치 활성화 함수 호출
+    }
+
+    private fun setMapStyle() {
+        try {
+            val style = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+            val success = mMap.setMapStyle(style)
             if (!success) {
                 Log.e("MapsActivity", "스타일 파싱 실패")
             }
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "스타일을 찾을 수 없음", e)
         }
-
-        updateLocationUI()
     }
 
-
-    // updateLocationUI는 사용자의 현재 위치를 지도에 표시합니다.
-    private fun updateLocationUI() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // 권한 요청
+    private fun enableMyLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = false
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val userLocation = LatLng(it.latitude, it.longitude)
+                    mMap.animateCamera(
+                        com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                            userLocation,
+                            20.0f
+                        )
+                    )
+                }
+            }
+        } else {
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_ACCESS_FINE_LOCATION
             )
-            return
         }
-        mMap.isMyLocationEnabled = true
-        mMap.uiSettings.isMyLocationButtonEnabled = true
-
-        if (mapReady) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        val userLocation = LatLng(it.latitude, it.longitude)
-                        mMap.moveCamera(
-                            com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
-                                userLocation,
-                                20.0f
-                            )
-                        )
-                        // Removed the marker addition line
-                    }
-                }
-        }
-
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (mapReady) {
+            enableMyLocation()
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = false
+        }
+    }
+
 }
