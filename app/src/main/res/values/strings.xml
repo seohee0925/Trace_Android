@@ -4,6 +4,94 @@
     <string name="tab1">Feed</string>
     <string name="tab2">My page</string>
 
+    <string name="map_style">
+        [
+          {
+            "featureType": "administrative.land_parcel",
+            "stylers": [
+              {
+                "saturation": -65
+              }
+            ]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "stylers": [
+              {
+                "saturation": -30
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.business",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "stylers": [
+              {
+                "saturation": -100
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "stylers": [
+              {
+                "saturation": -65
+              }
+            ]
+          }
+        ]
+    </string>
 
     <string name="fab_add_trace">Add My Trace</string>
     <string name="fab_add_trace_description">Add My Trace</string>
@@ -13,6 +101,5 @@
 
     <string name="cancel">Cancel</string>
     <string name="input_bottom_sheet_placeholder">record your own trace</string>
-
 
 </resources>
