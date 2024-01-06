@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.trace_android.databinding.ActivityEmailLoginBinding
 
+
 class EmailLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmailLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
