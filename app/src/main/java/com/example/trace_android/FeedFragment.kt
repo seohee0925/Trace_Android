@@ -90,47 +90,48 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         } else {
             Log.e("MapsActivity", "Context가 null입니다.")
         }
-        updateLocationUI()
+        enableMyLocation() // 현재 위치 활성화 함수 호출
     }
 
-
-    // updateLocationUI는 사용자의 현재 위치를 지도에 표시합니다.
-    private fun updateLocationUI() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // 권한 요청
+    private fun enableMyLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = false
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val userLocation = LatLng(it.latitude, it.longitude)
+                    mMap.animateCamera(
+                        com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                            userLocation,
+                            20.0f
+                        )
+                    )
+                }
+            }
+        } else {
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_ACCESS_FINE_LOCATION
             )
-            return
         }
-        mMap.isMyLocationEnabled = true
-        mMap.uiSettings.isMyLocationButtonEnabled = false
-        mMap.uiSettings.isCompassEnabled = true
-
-        if (mapReady) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        val userLocation = LatLng(it.latitude, it.longitude)
-                        mMap.moveCamera(
-                            com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
-                                userLocation,
-                                20.0f
-                            )
-                        )
-                        // Removed the marker addition line
-                    }
-                }
-        }
-
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (mapReady) {
+            enableMyLocation()
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = false
+        }
+    }
+
 }

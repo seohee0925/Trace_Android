@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">Trace_Android</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab1">Feed</string>
     <string name="tab2">My page</string>
-    <string name="fab_my_location_description">come back to my location</string>
+
+
+    <string name="fab_add_trace">Add My Trace</string>
+    <string name="fab_add_trace_description">Add My Trace</string>
+
+    <string name="fab_my_location_description">Come back to my location</string>
+
 
 </resources>
