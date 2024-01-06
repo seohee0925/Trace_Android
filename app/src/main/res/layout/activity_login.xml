@@ -6,9 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <com.navercorp.nid.oauth.view.NidOAuthLoginButton
-        android:id="@+id/buttonOAuthLoginImg"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="15dp">
 
+        <Button
+            android:id="@+id/login_btn"
+            android:text="이메일로 계속하기"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            />
+
+        <com.navercorp.nid.oauth.view.NidOAuthLoginButton
+            android:id="@+id/buttonOAuthLoginImg"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            />
+
+    </LinearLayout>
 </LinearLayout>
