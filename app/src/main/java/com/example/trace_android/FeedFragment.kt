@@ -18,7 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
 
 class FeedFragment : Fragment(), OnMapReadyCallback {
 
@@ -48,24 +47,24 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
     }
 
     // onMapReady에서 GoogleMap 객체를 초기화하고 사용자의 위치를 업데이트합니다.
+    // res/raw/map_style.json의 맵 스타일은 import합니다.
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mapReady = true
-        try {
-            // 맵 스타일 설정
-            val success = mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireContext(), R.string.map_style
-                )
-            )
 
-            if (!success) {
-                Log.e("MapsActivity", "스타일 파싱 실패")
+        if (context != null) {
+            try {
+                val style = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+                val success = mMap.setMapStyle(style)
+                if (!success) {
+                    Log.e("MapsActivity", "스타일 파싱 실패")
+                }
+            } catch (e: Resources.NotFoundException) {
+                Log.e("MapsActivity", "스타일을 찾을 수 없음", e)
             }
-        } catch (e: Resources.NotFoundException) {
-            Log.e("MapsActivity", "스타일을 찾을 수 없음", e)
+        } else {
+            Log.e("MapsActivity", "Context가 null입니다.")
         }
-
         updateLocationUI()
     }
 
