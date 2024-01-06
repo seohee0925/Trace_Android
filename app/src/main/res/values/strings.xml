@@ -101,5 +101,7 @@
 
     <string name="cancel">Cancel</string>
     <string name="input_bottom_sheet_placeholder">record your own trace</string>
+  <string name="calendar_view">calendar_view</string>
+  <string name="date_order">date order</string>
 
 </resources>

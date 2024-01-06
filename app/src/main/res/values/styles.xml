@@ -4,4 +4,29 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
+
+    <style name="ShapeAppearance.MaterialComponents.Medium.Component" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerSize">40dp</item>
+    </style>
+
+    <style name="Widget.Trace_Android.ImageView.Profile" parent="">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:background">@drawable/rounded_imageview_background</item>
+    </style>
+
+    <style name="ShapeAppearance.Trace_Android.MediumComponent" parent="ShapeAppearance.MaterialComponents.Medium.Component">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+
+    <style name="Widget.Trace_Android.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabIndicatorColor">@color/primary</item>
+        <item name="tabSelectedTextColor">@color/primary</item>
+        <item name="tabTextColor">@color/black</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
 </resources>
