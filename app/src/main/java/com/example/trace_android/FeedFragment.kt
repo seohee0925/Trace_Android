@@ -18,10 +18,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FeedFragment : Fragment(), OnMapReadyCallback {
-
 
     private val REQUEST_ACCESS_FINE_LOCATION = 1000
     private lateinit var mMap: GoogleMap
@@ -45,27 +44,52 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         childFragmentManager.beginTransaction().replace(R.id.map_container, mapFragment).commit()
         mapFragment.getMapAsync(this)
 
+        // '내 위치로 돌아오기' 버튼 리스너 설정
+        view.findViewById<FloatingActionButton>(R.id.fab_my_location)?.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            val userLocation = LatLng(it.latitude, it.longitude)
+                            mMap.animateCamera(
+                                com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                                    userLocation,
+                                    20.0f
+                                )
+                            )
+                        }
+                    }
+            }
+        }
+
     }
 
     // onMapReady에서 GoogleMap 객체를 초기화하고 사용자의 위치를 업데이트합니다.
+    // res/raw/map_style.json의 맵 스타일은 import합니다.
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mapReady = true
-        try {
-            // 맵 스타일 설정
-            val success = mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireContext(), R.string.map_style
-                )
-            )
 
-            if (!success) {
-                Log.e("MapsActivity", "스타일 파싱 실패")
+        if (context != null) {
+            try {
+                val style = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+                val success = mMap.setMapStyle(style)
+                if (!success) {
+                    Log.e("MapsActivity", "스타일 파싱 실패")
+                }
+            } catch (e: Resources.NotFoundException) {
+                Log.e("MapsActivity", "스타일을 찾을 수 없음", e)
             }
-        } catch (e: Resources.NotFoundException) {
-            Log.e("MapsActivity", "스타일을 찾을 수 없음", e)
+        } else {
+            Log.e("MapsActivity", "Context가 null입니다.")
         }
-
         updateLocationUI()
     }
 
@@ -89,7 +113,8 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
             return
         }
         mMap.isMyLocationEnabled = true
-        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = false
+        mMap.uiSettings.isCompassEnabled = true
 
         if (mapReady) {
             fusedLocationClient.lastLocation

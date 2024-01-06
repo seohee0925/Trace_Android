@@ -7,7 +7,8 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-String mapsApiKey = properties.getProperty("MY_API_KEY")
+String mapsApiKey = properties.getProperty("MAPS_API_KEY")
+
 
 android {
     namespace 'com.example.trace_android'
@@ -67,4 +68,7 @@ dependencies {
 //    implementation 'com.navercorp.nid:oauth-jdk8:5.9.0' // jdk 8
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:18.0.0")
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0' // 서버 통신
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0' // gson 변환
 }
