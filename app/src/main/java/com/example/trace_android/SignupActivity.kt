@@ -26,7 +26,7 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun initializeComponents() {
-        val retrofitService = RetrofitService()
+        val retrofitService = RetrofitService
         val memberAPI = retrofitService.retrofit.create(MemberAPI::class.java)
 
         binding.signupBtn.setOnClickListener {

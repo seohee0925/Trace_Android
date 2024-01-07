@@ -14,7 +14,7 @@ import retrofit2.Response
 
 class EmailLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmailLoginBinding
-    private val retrofitService = RetrofitService()
+    private val retrofitService = RetrofitService
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
