@@ -101,7 +101,12 @@
 
     <string name="cancel">Cancel</string>
     <string name="input_bottom_sheet_placeholder">record your own trace</string>
-  <string name="calendar_view">calendar_view</string>
-  <string name="date_order">date order</string>
+    <string name="calendar_view">calendar_view</string>
+    <string name="date_order">date order</string>
+    <string name="intro_firstlinegroup_description">Discover other\'s</string>
+    <string name="intro_secondlinegroup_description">Leave your</string>
+    <string name="intro_titlelinegroup_description"><![CDATA[—> Trace]]></string>
+    <string name="btn_email_text">이메일로 계속하기</string>
+    <string name="btn_naver_text">네이버 아이디로 계속하기</string>
 
 </resources>
