@@ -9,14 +9,27 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * 바텀 시트 다이얼로그 프래그먼트로, 사용자 입력을 받기 위한 UI를 제공합니다.
  */
 class InputBottomSheetFragment : BottomSheetDialogFragment() {
+
+    private var userLocation: LatLng? = null
+
+    // 위치 데이터를 설정하는 메서드
+    fun setLocation(location: LatLng) {
+        userLocation = location
+
+        // 바텀시트가 이미 시작되었다면 TextView를 즉시 업데이트합니다.
+        view?.findViewById<TextView>(R.id.textViewCurrentLocation)?.text =
+            getString(R.string.current_location_format, location.latitude, location.longitude)
+    }
 
     // 프래그먼트의 뷰가 생성될 때 호출됩니다.
     override fun onCreateView(
@@ -30,6 +43,12 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         val cancelButton = view.findViewById<Button>(R.id.buttonCancel)
         cancelButton.setOnClickListener {
             dismiss() // 바텀 시트를 닫습니다.
+        }
+
+        // 현재 좌표를 TextView에 표시합니다.
+        val textViewCurrentLocation = view.findViewById<TextView>(R.id.textViewCurrentLocation)
+        userLocation?.let { location ->
+            textViewCurrentLocation.text = getString(R.string.current_location_format, location.latitude, location.longitude)
         }
 
         return view
@@ -48,28 +67,28 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
             val behavior = params.behavior
             if (behavior is BottomSheetBehavior<*>) {
                 val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-                behavior.peekHeight = screenHeight - dpToPx(15) // 화면 높이에서 15dp만큼 빼기
+                val fixedPeekHeight = (15 * resources.displayMetrics.density).toInt() // directly using calculated value
+                behavior.peekHeight = screenHeight - fixedPeekHeight
                 parent.setBackgroundColor(Color.TRANSPARENT)
             }
         }
     }
 
-    // dp를 픽셀 단위로 변환하는 유틸리티 함수
-    private fun dpToPx(dp: Int): Int {
-        val density = resources.displayMetrics.density
-        return (dp * density).toInt()
-    }
 
     // 프래그먼트의 뷰가 생성되고 난 후 호출됩니다.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 텍스트 입력을 위한 EditText를 찾고 포커스를 설정합니다.
+        // EditText에 포커스를 주고 키보드를 엽니다.
         val editTextUserInput = view.findViewById<EditText>(R.id.editTextUserInput)
         editTextUserInput.requestFocus()
-
-        // 소프트 키보드가 자동으로 나타나도록 설정합니다.
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-    }
 
+        // 현재 좌표를 표시하는 TextView를 설정합니다.
+        val textViewCurrentLocation = view.findViewById<TextView>(R.id.textViewCurrentLocation)
+        userLocation?.let { location ->
+            val locationText = "현재좌표: ${location.latitude}, ${location.longitude}"
+            textViewCurrentLocation.text = locationText
+        }
+    }
 }

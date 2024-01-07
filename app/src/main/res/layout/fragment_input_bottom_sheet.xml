@@ -8,6 +8,26 @@
     android:background="@drawable/rounded_top_background"
     android:padding="16dp">
 
+    <!-- 제목 "Add my Trace" -->
+    <TextView
+        android:id="@+id/textViewAddMyTrace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fab_add_trace_description"
+        android:textSize="18sp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- 현재 좌표를 표시할 텍스트 뷰 -->
+    <TextView
+        android:id="@+id/textViewCurrentLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 사용자 입력 필드 -->
     <EditText
         android:id="@+id/editTextUserInput"
         android:layout_width="match_parent"
@@ -15,16 +35,20 @@
         android:hint="@string/input_bottom_sheet_placeholder"
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
-        />
+        android:autofillHints="location"
+        android:layout_marginBottom="16dp"/>
 
+    <!-- 제출 버튼 -->
     <Button
         android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         app:backgroundTint="@color/primary"
-        android:text="@string/fab_add_trace_description"/>
+        android:text="@string/fab_add_trace_description"
+        android:layout_marginBottom="8dp"/>
 
+    <!-- 취소 버튼 -->
     <Button
         android:id="@+id/buttonCancel"
         android:layout_width="match_parent"

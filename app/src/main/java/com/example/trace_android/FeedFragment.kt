@@ -73,9 +73,16 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         // FAB 버튼 참조를 찾고 클릭 리스너를 설정합니다.
         val fabAddTrace = view.findViewById<ExtendedFloatingActionButton>(R.id.fab_add_trace)
         fabAddTrace.setOnClickListener {
-            // InputBottomSheetFragment 인스턴스를 생성하고 보여줍니다.
-            val inputBottomSheetFragment = InputBottomSheetFragment()
-            inputBottomSheetFragment.show(parentFragmentManager, inputBottomSheetFragment.tag)
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val userLocation = LatLng(it.latitude, it.longitude)
+                    // InputBottomSheetFragment 인스턴스를 생성하고 사용자 위치를 설정합니다.
+                    val inputBottomSheetFragment = InputBottomSheetFragment().apply {
+                        setLocation(userLocation)
+                    }
+                    inputBottomSheetFragment.show(parentFragmentManager, inputBottomSheetFragment.tag)
+                }
+            }
         }
 
     }
