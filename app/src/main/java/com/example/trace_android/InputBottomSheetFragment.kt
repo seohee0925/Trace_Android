@@ -10,10 +10,17 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.example.trace_android.model.PostRequest
+import com.example.trace_android.retrofit.RetrofitService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * 바텀 시트 다이얼로그 프래그먼트로, 사용자 입력을 받기 위한 UI를 제공합니다.
@@ -21,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng
 class InputBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var userLocation: LatLng? = null
+    private lateinit var editTextUserInput: EditText // 멤버 변수로 선언
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -38,6 +46,33 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     ): View? {
         // 바텀 시트의 레이아웃을 인플레이트합니다.
         val view = inflater.inflate(R.layout.fragment_input_bottom_sheet, container, false)
+
+        editTextUserInput = view.findViewById<EditText>(R.id.editTextUserInput)
+
+        // 버튼 리스너 추가
+        val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
+        buttonSubmit.setOnClickListener {
+            val content = editTextUserInput.text.toString()
+            val email = "user@example.com" // 사용자 이메일 설정
+            val postRequest = PostRequest(content, userLocation?.latitude ?: 0.0, userLocation?.longitude ?: 0.0, email)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = RetrofitService.apiService.createPost(postRequest) // 수정된 접근 방식
+                    withContext(Dispatchers.Main) {
+                        // 성공 처리: 예를 들어 토스트 메시지 표시
+                        Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                        dismiss()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        // 오류 처리: 예를 들어 오류 메시지 표시
+                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
 
         // '취소' 버튼을 찾아 클릭 리스너를 설정합니다. 버튼 클릭 시 바텀 시트를 닫습니다.
         val cancelButton = view.findViewById<Button>(R.id.buttonCancel)
