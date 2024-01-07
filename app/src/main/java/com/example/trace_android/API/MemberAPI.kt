@@ -1,4 +1,4 @@
-package com.example.trace_android.retrofit
+package com.example.trace_android.API
 
 import com.example.trace_android.model.Member
 import retrofit2.Call
