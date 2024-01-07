@@ -1,8 +1,9 @@
 package com.example.trace_android.model
 
-class Member {
-    var id: Long? = null
-    var name: String? = null
-    var email: String? = null
-    var password: String? = null
-}
+import com.google.gson.annotations.SerializedName
+
+data class Member(
+    @SerializedName("name") val name: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("password") val password: String
+)

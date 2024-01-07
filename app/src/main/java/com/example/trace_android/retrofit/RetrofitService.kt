@@ -13,9 +13,10 @@ class RetrofitService {
     }
 
     private fun initializeRetrofit() {
+        val gson = GsonBuilder().setLenient().create()
         retrofit = Retrofit.Builder()
             .baseUrl("http://143.248.225.149:8080")
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
