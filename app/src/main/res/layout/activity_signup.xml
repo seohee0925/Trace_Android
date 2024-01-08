@@ -4,36 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignupActivity">
+    android:background="@color/primary_highlight"
+    tools:context=".SignupActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="32dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_back_btn"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:contentDescription="Back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:theme="@style/MediumFont"
+            android:layout_gravity="center"
+            />
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:gravity="center_horizontal">
 
         <EditText
             android:id="@+id/emailInput"
             android:hint="Email"
-            android:layout_margin="8dp"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:theme="@style/RegularFont"
+            android:background="@drawable/input_custom"/>
 
         <EditText
             android:id="@+id/nameInput"
             android:hint="Name"
-            android:layout_margin="8dp"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:theme="@style/RegularFont"
+            android:background="@drawable/input_custom"/>
 
         <EditText
             android:id="@+id/passwordInput"
             android:hint="Password"
-            android:layout_margin="8dp"
+            android:layout_marginBottom="40dp"
+            android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            android:theme="@style/RegularFont"
+            android:background="@drawable/input_custom"/>
 
         <android.widget.Button
             android:id="@+id/signup_btn"
@@ -42,6 +80,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_custom"
             android:textColor="@color/white"
+            android:textSize="16sp"
+            android:theme="@style/RegularFont"
             />
     </LinearLayout>
 </LinearLayout>

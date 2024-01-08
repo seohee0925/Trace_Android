@@ -2,6 +2,7 @@ package com.example.trace_android
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.trace_android.API.LoginAPI
@@ -36,6 +37,15 @@ class EmailLoginActivity : AppCompatActivity() {
         binding.signupBtn.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
+        }
+
+        setupBackButton()
+    }
+
+    private fun setupBackButton() {
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            onBackPressed()
         }
     }
 
