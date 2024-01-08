@@ -11,15 +11,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.example.trace_android.retrofit.RetrofitService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FeedFragment : Fragment(), OnMapReadyCallback {
 
@@ -62,7 +70,7 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                             mMap.animateCamera(
                                 com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
                                     userLocation,
-                                    15.0f
+                                    17.0f
                                 )
                             )
                         }
@@ -93,6 +101,41 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         mMap = googleMap
         mapReady = true
 
+        mMap.setOnCameraIdleListener {
+            val currentViewport = getCurrentMapViewport()
+            val southWest = currentViewport.southwest
+            val northEast = currentViewport.northeast
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = RetrofitService.apiService.getPostsInArea(
+                        southWest.latitude, southWest.longitude,
+                        northEast.latitude, northEast.longitude
+                    )
+                    if (response.isSuccessful) {
+                        val posts = response.body() ?: emptyList()
+                        withContext(Dispatchers.Main) {
+                            // 맵에 포스트 마커 추가
+                            posts.forEach { post ->
+                                val postLocation = LatLng(post.latitude, post.longitude)
+                                mMap.addMarker(MarkerOptions().position(postLocation).title(post.content))
+                            }
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            // 서버 오류 처리
+                            Toast.makeText(context, "Error: ${response.message()}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        // 네트워크 오류 처리
+                        Toast.makeText(context, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
         setMapStyle()
         enableMyLocation() // 현재 위치 활성화 함수 호출
     }
@@ -120,7 +163,7 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                     mMap.animateCamera(
                         com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
                             userLocation,
-                            15.0f
+                            17.0f
                         )
                     )
                 }
@@ -133,6 +176,19 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
             )
         }
     }
+
+    // 현재 화면에 보이는 만큼의 좌표 범위를 리턴.
+    // 화면에 보이는 부분만큼만 Pin 정보를 업데이트하기 위해 사용.
+    private fun getCurrentMapViewport(): LatLngBounds {
+        if (!::mMap.isInitialized) {
+            throw IllegalStateException("Map is not initialized yet")
+        }
+
+        val projection = mMap.projection
+        val visibleRegion = projection.visibleRegion
+        return visibleRegion.latLngBounds
+    }
+
 
     override fun onResume() {
         super.onResume()
