@@ -18,4 +18,18 @@ object RetrofitService { // 싱글톤 객체로 변경
     val apiService: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }
+
+
+    // Geocoding API 서비스
+    private val geocodingRetrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://maps.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val geocodingService: GeocodingService by lazy {
+        geocodingRetrofit.create(GeocodingService::class.java)
+    }
+
 }
