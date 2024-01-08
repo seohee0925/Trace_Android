@@ -72,6 +72,15 @@
                 android:padding="8dp"
                 android:layout_below="@id/divider"/>
 
+            <TextView
+                android:id="@+id/textViewAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:layout_below="@id/textViewCurrentLocation"/>
+
+
             <!-- 선택된 이미지 표시 ImageView -->
             <ImageView
                 android:id="@+id/imageViewSelectedPhoto"

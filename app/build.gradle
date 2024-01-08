@@ -27,6 +27,7 @@ android {
 
         // Manifest placeholders 설정
         manifestPlaceholders = [MY_API_KEY: mapsApiKey]
+        buildConfigField "String", "MY_API_KEY", "\"${properties['MAPS_API_KEY']}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "NAVER_CLIENT_ID", properties['naver_client_id']

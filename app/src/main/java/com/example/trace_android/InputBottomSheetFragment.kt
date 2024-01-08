@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import android.util.Base64
+import com.example.trace_android.retrofit.GeocodingRepository
 
 
 /**
@@ -46,15 +47,26 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var buttonContainer: LinearLayout
     private var selectedImageBase64: String? = null // 선택된 이미지의 Base64 인코딩된 문자열을 저장할 변수
     private var originalContainerY: Float = 0f // 컨테이너의 원래 Y 좌표, 키보드 여닫음에 따라 버튼 위치를 바꾸기 위해 사용
+    private val geocodingRepository = GeocodingRepository(RetrofitService.geocodingService) //지오코딩을 위한 선언
+
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
         userLocation = location
-
-        // 바텀시트가 이미 시작되었다면 TextView를 즉시 업데이트합니다.
-        view?.findViewById<TextView>(R.id.textViewCurrentLocation)?.text =
-            getString(R.string.current_location_format, location.latitude, location.longitude)
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val address = geocodingRepository.getFormattedAddress(location)
+                address?.let {
+                    view?.findViewById<TextView>(R.id.textViewAddress)?.text = it
+                } ?: run {
+                    Toast.makeText(context, "주소를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "오류 발생: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
 
     // 프래그먼트의 뷰가 생성될 때 호출됩니다.
     override fun onCreateView(
@@ -288,3 +300,4 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
 }
+
