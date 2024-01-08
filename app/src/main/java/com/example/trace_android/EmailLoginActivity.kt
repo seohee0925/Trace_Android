@@ -2,6 +2,7 @@ package com.example.trace_android
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -55,12 +56,14 @@ class EmailLoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Member>, response: Response<Member>) {
                 if (response.isSuccessful) {
                     val member = response.body()
-                    // Handle successful login
-                    val intent = Intent(this@EmailLoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    // 로그인 성공 시
+                    member?.let {
+                        val intent = Intent(this@EmailLoginActivity, MainActivity::class.java)
+                        intent.putExtra("user_email", it.email)
+                        startActivity(intent)
+                        finish()
+                    }
                 } else {
-                    // Handle unsuccessful login due to server error
                     Toast.makeText(this@EmailLoginActivity, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -71,4 +74,5 @@ class EmailLoginActivity : AppCompatActivity() {
             }
         })
     }
+
 }

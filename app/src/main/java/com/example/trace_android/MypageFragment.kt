@@ -1,31 +1,48 @@
 package com.example.trace_android
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import com.example.trace_android.API.MemberAPI
+import com.example.trace_android.model.Member
+import com.example.trace_android.retrofit.RetrofitService.retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MypageFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MypageFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var userEmail: String? = null
+    private var userName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+        userEmail = activity?.intent?.getStringExtra("user_email")
+        Log.d("MypageFragment", "User Email: $userEmail")
+
+        // MemberAPI를 사용하여 사용자 이름 가져오기
+        userEmail?.let {
+            val memberAPI = retrofit.create(MemberAPI::class.java)
+            memberAPI.getMemberByEmail(it).enqueue(object : Callback<Member> {
+                override fun onResponse(call: Call<Member>, response: Response<Member>) {
+                    if (response.isSuccessful) {
+                        val user = response.body()
+                        userName = user?.name // 사용자 이름 설정
+
+                        userName?.let {
+                            view?.findViewById<TextView>(R.id.userName)?.text = it
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Member>, t: Throwable) {
+                }
+            })
         }
     }
 
@@ -33,27 +50,16 @@ class MypageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mypage, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MypageFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MypageFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // userEmail 값이 있다면 화면에 표시
+        userEmail?.let {
+            // 이메일을 userId TextView에 표시
+            val userIdTextView: TextView = view.findViewById(R.id.userId) // userId TextView 찾기
+            userIdTextView.text = it // 이메일 값 설정
+        }
     }
 }

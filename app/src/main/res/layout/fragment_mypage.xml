@@ -33,16 +33,16 @@
             android:paddingStart="16dp">
 
             <TextView
+                android:id="@+id/userId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User ID"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:theme="@style/RegularFont"/>
 
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:theme="@style/RegularFont"/>
         </LinearLayout>
