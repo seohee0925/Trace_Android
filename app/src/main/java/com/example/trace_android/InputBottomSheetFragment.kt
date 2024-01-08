@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
@@ -30,6 +32,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import android.util.Base64
+
 
 /**
  * 바텀 시트 다이얼로그 프래그먼트로, 사용자 입력을 받기 위한 UI를 제공합니다.
@@ -39,7 +44,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private var userLocation: LatLng? = null
     private lateinit var editTextUserInput: EditText // 멤버 변수로 선언
     private lateinit var buttonContainer: LinearLayout
-    private var originalContainerY: Float = 0f // 컨테이너의 원래 Y 좌표
+    private var selectedImageBase64: String? = null // 선택된 이미지의 Base64 인코딩된 문자열을 저장할 변수
+    private var originalContainerY: Float = 0f // 컨테이너의 원래 Y 좌표, 키보드 여닫음에 따라 버튼 위치를 바꾸기 위해 사용
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -61,15 +67,24 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         editTextUserInput = view.findViewById<EditText>(R.id.editTextUserInput)
 
         // 버튼 리스너 추가
+        // '제출' 버튼 리스너
         val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
         buttonSubmit.setOnClickListener {
             val content = editTextUserInput.text.toString()
             val email = "user@example.com" // 사용자 이메일 설정
+
+            // 이미지 Base64 인코딩 및 분할
+            val (imageBase64, imageExtraBase64) = selectedImageBase64?.let {
+                encodeBitmapToBase64(loadBitmapFromUri(Uri.parse(it)))
+            } ?: Pair("", null)
+
             val postRequest = PostRequest(
                 content,
                 userLocation?.latitude ?: 0.0,
                 userLocation?.longitude ?: 0.0,
-                email
+                email,
+                imageBase64,
+                imageExtraBase64
             )
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -135,6 +150,9 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         // 버튼 컨테이너 인스턴스 초기화
         buttonContainer = view.findViewById(R.id.buttonContainer)
         originalContainerY = buttonContainer.y // 컨테이너의 원래 Y 좌표 저장
+
+        val behavior = BottomSheetBehavior.from(view.parent as View)
+        behavior.isDraggable = false  // 바텀 시트 드래그 비활성화
 
         // 키보드 상태 감지
         val rootView = activity?.findViewById<View>(android.R.id.content)
@@ -211,15 +229,16 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // 선택된 이미지의 Uri를 받아옴
             val selectedImageUri: Uri? = result.data?.data
-            // 선택된 이미지를 ImageView에 표시
             view?.findViewById<ImageView>(R.id.imageViewSelectedPhoto)?.apply {
                 visibility = View.VISIBLE
                 setImageURI(selectedImageUri)
+                // Uri를 문자열로 저장
+                selectedImageBase64 = selectedImageUri.toString()
             }
         }
     }
+
 
     // 갤러리를 여는 함수
     private fun openGallery() {
@@ -228,6 +247,26 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         pickImage.launch(intent)
     }
 
+    // Uri에서 Bitmap을 로드하는 함수
+    private fun loadBitmapFromUri(uri: Uri): Bitmap {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        return BitmapFactory.decodeStream(inputStream)
+    }
+
+    // Bitmap을 Base64 문자열로 인코딩하는 함수
+    private fun encodeBitmapToBase64(bitmap: Bitmap): Pair<String, String?> {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        val byteArray = outputStream.toByteArray()
+        val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+
+        // 이미지 데이터를 절반으로 분할
+        val midpoint = base64String.length / 2
+        val firstHalf = base64String.substring(0, midpoint)
+        val secondHalf = base64String.substring(midpoint)
+
+        return Pair(firstHalf, secondHalf.takeIf { it.isNotEmpty() })
+    }
 
 
     private fun adjustBottomSheetPosition(keyboardHeight: Int) {

@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/titleContainer"
+        android:background="@color/white"
         android:layout_alignParentTop="true">
         <!-- 취소 버튼 -->
         <Button
@@ -36,10 +37,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"/>
-
     </RelativeLayout>
 
-    <!-- Divider -->
+    <!-- 구분선 -->
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -49,40 +49,54 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Current location TextView -->
-    <TextView
-        android:id="@+id/textViewCurrentLocation"
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:padding="8dp"
         android:layout_below="@id/divider"
-        android:layout_marginBottom="8dp"/>
+        android:layout_above="@id/buttonContainer">
 
-    <!-- ImageView for selected photo -->
-    <ImageView
-        android:id="@+id/imageViewSelectedPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewCurrentLocation"
-        android:contentDescription="@string/selected_image_description"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-    <!-- User input field -->
-    <EditText
-        android:id="@+id/editTextUserInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minLines="3"
-        android:maxLines="10"
-        android:gravity="top|start"
-        android:hint="@string/input_bottom_sheet_placeholder"
-        android:inputType="textMultiLine|textCapSentences"
-        android:scrollbars="vertical"
-        android:autofillHints="location"
-        android:layout_below="@id/imageViewSelectedPhoto"
-        android:layout_marginTop="16dp"/>
+
+            <!-- 현재 위치 TextView -->
+            <TextView
+                android:id="@+id/textViewCurrentLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:layout_below="@id/divider"/>
+
+            <!-- 선택된 이미지 표시 ImageView -->
+            <ImageView
+                android:id="@+id/imageViewSelectedPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                android:contentDescription="@string/selected_image_description"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"/>
+
+            <!-- 사용자 입력 필드 EditText -->
+            <EditText
+                android:id="@+id/editTextUserInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="2"
+                android:maxLines="10"
+                android:gravity="top|start"
+                android:hint="@string/input_bottom_sheet_placeholder"
+                android:inputType="textMultiLine|textCapSentences"
+                android:autofillHints="location"
+                android:layout_below="@id/imageViewSelectedPhoto"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+    </ScrollView>
 
     <!-- 버튼 컨테이너 -->
     <LinearLayout
@@ -91,6 +105,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
         android:paddingBottom="16dp">
 
         <!-- 사진 추가 버튼 -->
@@ -99,6 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="사진 추가"
+            android:textColor="@color/primary"
             style="?attr/borderlessButtonStyle"
             android:background="@drawable/button_selector_cancel"
             android:layout_weight="1"/>
