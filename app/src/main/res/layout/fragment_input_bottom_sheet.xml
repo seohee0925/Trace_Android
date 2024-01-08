@@ -59,6 +59,16 @@
         android:layout_below="@id/divider"
         android:layout_marginBottom="8dp"/>
 
+    <!-- ImageView for selected photo -->
+    <ImageView
+        android:id="@+id/imageViewSelectedPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCurrentLocation"
+        android:contentDescription="@string/selected_image_description"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"/>
+
     <!-- User input field -->
     <EditText
         android:id="@+id/editTextUserInput"
@@ -71,9 +81,8 @@
         android:inputType="textMultiLine|textCapSentences"
         android:scrollbars="vertical"
         android:autofillHints="location"
-        android:layout_below="@id/textViewCurrentLocation"
-        android:layout_marginTop="16dp"
-        android:layout_above="@id/buttonContainer"/>
+        android:layout_below="@id/imageViewSelectedPhoto"
+        android:layout_marginTop="16dp"/>
 
     <!-- 버튼 컨테이너 -->
     <LinearLayout

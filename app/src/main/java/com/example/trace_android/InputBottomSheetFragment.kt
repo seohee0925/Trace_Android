@@ -1,18 +1,26 @@
 package com.example.trace_android
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import com.example.trace_android.model.PostRequest
 import com.example.trace_android.retrofit.RetrofitService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -143,7 +151,84 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 resetBottomSheetPosition()
             }
         }
+
+        // '사진 추가' 버튼 클릭 이벤트 처리
+        val buttonAddPhoto = view.findViewById<Button>(R.id.buttonAddPhoto)
+        buttonAddPhoto.setOnClickListener {
+            checkStoragePermission() // 권한 확인 및 갤러리 열기
+        }
+
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    // 권한 확인 및 갤러리를 여는 함수
+    private fun checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted. Request for permission.
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_STORAGE_PERMISSION
+            )
+        } else {
+            // Permission has already been granted. Open gallery.
+            openGallery()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            REQUEST_STORAGE_PERMISSION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Permission was granted. Open gallery.
+                    openGallery()
+                } else {
+                    // Permission denied. Handle the feature's non-availability.
+                    Toast.makeText(context, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+            // Add other 'when' lines to check for other permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_STORAGE_PERMISSION = 101
+    }
+
+    private val pickImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 선택된 이미지의 Uri를 받아옴
+            val selectedImageUri: Uri? = result.data?.data
+            // 선택된 이미지를 ImageView에 표시
+            view?.findViewById<ImageView>(R.id.imageViewSelectedPhoto)?.apply {
+                visibility = View.VISIBLE
+                setImageURI(selectedImageUri)
+            }
+        }
+    }
+
+    // 갤러리를 여는 함수
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        pickImage.launch(intent)
+    }
+
+
 
     private fun adjustBottomSheetPosition(keyboardHeight: Int) {
         // 바텀시트의 위치를 키보드 위로 조정

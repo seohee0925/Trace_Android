@@ -109,5 +109,6 @@
     <string name="btn_email_text">이메일로 계속하기</string>
     <string name="btn_naver_text">네이버 아이디로 계속하기</string>
     <string name="current_location_format">현재좌표: %1$f, %2$f</string>
+    <string name="selected_image_description">포스팅을 위한 사진이 들어갈 곳</string>
 
 </resources>
