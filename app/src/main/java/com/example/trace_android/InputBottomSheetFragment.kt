@@ -2,13 +2,14 @@ package com.example.trace_android
 
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -29,6 +30,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var userLocation: LatLng? = null
     private lateinit var editTextUserInput: EditText // 멤버 변수로 선언
+    private lateinit var buttonContainer: LinearLayout
+    private var originalContainerY: Float = 0f // 컨테이너의 원래 Y 좌표
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -54,7 +57,12 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         buttonSubmit.setOnClickListener {
             val content = editTextUserInput.text.toString()
             val email = "user@example.com" // 사용자 이메일 설정
-            val postRequest = PostRequest(content, userLocation?.latitude ?: 0.0, userLocation?.longitude ?: 0.0, email)
+            val postRequest = PostRequest(
+                content,
+                userLocation?.latitude ?: 0.0,
+                userLocation?.longitude ?: 0.0,
+                email
+            )
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
@@ -83,7 +91,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         // 현재 좌표를 TextView에 표시합니다.
         val textViewCurrentLocation = view.findViewById<TextView>(R.id.textViewCurrentLocation)
         userLocation?.let { location ->
-            textViewCurrentLocation.text = getString(R.string.current_location_format, location.latitude, location.longitude)
+            textViewCurrentLocation.text =
+                getString(R.string.current_location_format, location.latitude, location.longitude)
         }
 
         return view
@@ -102,7 +111,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
             val behavior = params.behavior
             if (behavior is BottomSheetBehavior<*>) {
                 val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-                val fixedPeekHeight = (15 * resources.displayMetrics.density).toInt() // directly using calculated value
+                val fixedPeekHeight =
+                    (15 * resources.displayMetrics.density).toInt() // directly using calculated value
                 behavior.peekHeight = screenHeight - fixedPeekHeight
                 parent.setBackgroundColor(Color.TRANSPARENT)
             }
@@ -114,16 +124,43 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // EditText에 포커스를 주고 키보드를 엽니다.
-        val editTextUserInput = view.findViewById<EditText>(R.id.editTextUserInput)
-        editTextUserInput.requestFocus()
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        // 버튼 컨테이너 인스턴스 초기화
+        buttonContainer = view.findViewById(R.id.buttonContainer)
+        originalContainerY = buttonContainer.y // 컨테이너의 원래 Y 좌표 저장
 
-        // 현재 좌표를 표시하는 TextView를 설정합니다.
-        val textViewCurrentLocation = view.findViewById<TextView>(R.id.textViewCurrentLocation)
-        userLocation?.let { location ->
-            val locationText = "현재좌표: ${location.latitude}, ${location.longitude}"
-            textViewCurrentLocation.text = locationText
+        // 키보드 상태 감지
+        val rootView = activity?.findViewById<View>(android.R.id.content)
+        rootView?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val r = Rect()
+            rootView.getWindowVisibleDisplayFrame(r)
+            val screenHeight = rootView.rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            // 키보드가 활성화되었다고 간주
+            if (keypadHeight > screenHeight * 0.15) {
+                adjustBottomSheetPosition(keypadHeight)
+            } else { // 키보드가 숨겨짐
+                resetBottomSheetPosition()
+            }
         }
     }
+
+    private fun adjustBottomSheetPosition(keyboardHeight: Int) {
+        // 바텀시트의 위치를 키보드 위로 조정
+        dialog?.window?.let { window ->
+            val params = window.attributes
+            params.y = keyboardHeight  // 키보드의 높이만큼 Y 좌표를 이동
+            window.attributes = params
+        }
+    }
+
+    private fun resetBottomSheetPosition() {
+        // 바텀시트의 위치를 원래대로 복원
+        dialog?.window?.let { window ->
+            val params = window.attributes
+            params.y = 0  // Y 좌표를 원래대로 복원
+            window.attributes = params
+        }
+    }
+
 }
