@@ -57,6 +57,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/btn_custom"
             android:textColor="@color/white"
+            android:theme="@style/RegularFont"
             />
 
         <android.widget.Button
@@ -65,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/btn_naver"
+            android:theme="@style/RegularFont"
             />
 
     </LinearLayout>

@@ -23,5 +23,6 @@
         android:background="@color/black"
         app:itemTextColor="@color/white"
         app:itemIconSize="24dp"
-        app:labelVisibilityMode="labeled"/>
+        app:labelVisibilityMode="labeled"
+        android:theme="@style/MediumFont"/>
 </LinearLayout>
