@@ -62,7 +62,7 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                             mMap.animateCamera(
                                 com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
                                     userLocation,
-                                    20.0f
+                                    15.0f
                                 )
                             )
                         }
@@ -120,7 +120,7 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                     mMap.animateCamera(
                         com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
                             userLocation,
-                            20.0f
+                            15.0f
                         )
                     )
                 }
