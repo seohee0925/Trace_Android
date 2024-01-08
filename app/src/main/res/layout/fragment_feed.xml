@@ -21,6 +21,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/fab_my_location_description"
         app:backgroundTint="@color/black"
+        android:theme="@style/RegularFont"
         />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -32,6 +33,7 @@
         android:text="@string/fab_add_trace"
         android:textColor="@color/black"
         android:contentDescription="@string/fab_add_trace_description"
-        app:backgroundTint="@color/primary_highlight" />
+        app:backgroundTint="@color/primary_highlight"
+        android:theme="@style/RegularFont"/>
 
 </FrameLayout>

@@ -1,8 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Trace_Android" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/primary_highlight</item>
     </style>
 
     <style name="Theme.Trace_Android" parent="Base.Theme.Trace_Android" />
@@ -11,4 +10,17 @@
         <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
         <item name="fullscreenTextColor">@color/light_blue_A200</item>
     </style>
+
+    <style name="MediumFont">
+        <item name="android:fontFamily">@font/redhatmono_medium</item>
+    </style>
+
+    <style name="RegularFont">
+        <item name="android:fontFamily">@font/redhatmono_regular</item>
+    </style>
+
+    <style name="SemiBoldFont">
+        <item name="android:fontFamily">@font/redhatmono_semibold</item>
+    </style>
+
 </resources>
