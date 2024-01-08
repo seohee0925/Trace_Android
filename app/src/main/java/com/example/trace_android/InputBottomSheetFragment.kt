@@ -2,6 +2,7 @@ package com.example.trace_android
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import android.util.Base64
+import android.util.Log
 import com.example.trace_android.retrofit.GeocodingRepository
 
 
@@ -49,6 +51,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private var originalContainerY: Float = 0f // 컨테이너의 원래 Y 좌표, 키보드 여닫음에 따라 버튼 위치를 바꾸기 위해 사용
     private val geocodingRepository = GeocodingRepository(RetrofitService.geocodingService) //지오코딩을 위한 선언
 
+    private var userEmail: String? = null
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -78,12 +81,19 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
 
         editTextUserInput = view.findViewById<EditText>(R.id.editTextUserInput)
 
-        // 버튼 리스너 추가
+        userEmail = activity?.intent?.getStringExtra("user_email")
+
+        val sharedPreferences = activity?.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+
+        editor?.putString("userEmail", userEmail)
+        editor?.apply()
+
         // '제출' 버튼 리스너
         val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
         buttonSubmit.setOnClickListener {
             val content = editTextUserInput.text.toString()
-            val email = "user@example.com" // 사용자 이메일 설정
+            val email = userEmail // 사용자 이메일 설정
 
             // 이미지 Base64 인코딩 및 분할
             val (imageBase64, imageExtraBase64) = selectedImageBase64?.let {
@@ -94,7 +104,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 content,
                 userLocation?.latitude ?: 0.0,
                 userLocation?.longitude ?: 0.0,
-                email,
+                email ?: ""
                 imageBase64,
                 imageExtraBase64
             )
@@ -104,7 +114,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                     val response = RetrofitService.apiService.createPost(postRequest) // 수정된 접근 방식
                     withContext(Dispatchers.Main) {
                         // 성공 처리: 예를 들어 토스트 메시지 표시
-                        Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, email, Toast.LENGTH_SHORT).show()
                         dismiss()
                     }
                 } catch (e: Exception) {
