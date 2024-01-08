@@ -52,6 +52,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private val geocodingRepository = GeocodingRepository(RetrofitService.geocodingService) //지오코딩을 위한 선언
 
     private var userEmail: String? = null
+    private var imageBase64: String? = null
+    private var imageExtraBase64: String? = null
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -104,8 +106,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 content,
                 userLocation?.latitude ?: 0.0,
                 userLocation?.longitude ?: 0.0,
-                email ?: ""
-                imageBase64,
+                email ?: "",
+                imageBase64 ?: "",
                 imageExtraBase64
             )
 
@@ -257,6 +259,13 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 setImageURI(selectedImageUri)
                 // Uri를 문자열로 저장
                 selectedImageBase64 = selectedImageUri.toString()
+
+                selectedImageUri?.let { uri ->
+                    val bitmap = loadBitmapFromUri(uri)
+                    val (base64, extraBase64) = encodeBitmapToBase64(bitmap)
+                    imageBase64 = base64
+                    imageExtraBase64 = extraBase64
+                }
             }
         }
     }
