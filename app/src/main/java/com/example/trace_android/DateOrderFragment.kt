@@ -17,10 +17,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class DateOrderFragment : Fragment() {
     private var userEmail: String? = null
-    private var content: String? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     val postDataList = ArrayList<PostData>()
@@ -53,8 +51,10 @@ class DateOrderFragment : Fragment() {
                     userList?.let {
                         for (member in it) {
                             val memberContent = member.content
-                            Log.d("seohee", "Member Content: $memberContent")
-                            postDataList.add(PostData(memberContent, "서울"))
+                            val combinedImage = "${member.image}${member.imageExtra}"
+                            val place = member.latitude // 추후에 지역으로 변경
+                            
+                            postDataList.add(PostData(combinedImage, memberContent, "서울", "2021-05-01"))
                         }
                         postAdapter.notifyDataSetChanged()
                     }

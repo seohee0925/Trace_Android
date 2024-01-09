@@ -10,7 +10,7 @@ object RetrofitService { // 싱글톤 객체로 변경
     val retrofit: Retrofit by lazy {
         val gson = GsonBuilder().setLenient().create()
         Retrofit.Builder()
-            .baseUrl("http://172.10.7.70:80")
+            .baseUrl("http://143.248.225.158:8080")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
