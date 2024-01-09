@@ -1,5 +1,7 @@
 package com.example.trace_android.model
 
+import java.util.Date
+
 data class PostRequest(
     val content: String,
     val latitude: Double,
@@ -7,7 +9,8 @@ data class PostRequest(
     val email: String,
     val image: String, // 첫 번째 부분의 Base64 인코딩된 이미지 데이터
     val imageExtra: String? = null, // 추가 이미지 데이터
-    val address: String                 // 주소 필드 추가
+    val address: String,                 // 주소 필드 추가
+    val createdDate: Date
 )
 
 data class PostResponse(
@@ -23,5 +26,6 @@ data class Post(
     val longitude: Double,
     val image: String,                  // 첫 번째 부분의 Base64 인코딩된 이미지 데이터
     val imageExtra: String?,             // 추가 이미지 데이터
-    val address: String                 // 주소 필드 추가
+    val address: String,               // 주소 필드 추가
+    val createdDate: Date
 )

@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trace_android.API.MemberAPI
-import com.example.trace_android.model.Member
 import com.example.trace_android.model.Post
 import com.example.trace_android.retrofit.RetrofitService
 import retrofit2.Call
@@ -52,9 +50,10 @@ class DateOrderFragment : Fragment() {
                         for (member in it) {
                             val memberContent = member.content
                             val combinedImage = "${member.image}${member.imageExtra}"
-                            val place = member.latitude // 추후에 지역으로 변경
+                            val place = member.address
+                            val date = member.createdDate
                             
-                            postDataList.add(PostData(combinedImage, memberContent, "서울", "2021-05-01"))
+                            postDataList.add(PostData(combinedImage, memberContent, place, date))
                         }
                         postAdapter.notifyDataSetChanged()
                     }
