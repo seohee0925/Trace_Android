@@ -26,6 +26,7 @@ class PostDetailsDialogFragment : DialogFragment() {
         params?.y = 16 // 16dp의 마진
         window?.attributes = params
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<TextView>(R.id.postViewContents).text = post?.content

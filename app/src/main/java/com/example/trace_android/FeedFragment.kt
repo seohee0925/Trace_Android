@@ -85,18 +85,36 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         enableMyLocation()
 
         mMap.setOnMarkerClickListener { marker ->
-            // 지도 뷰를 마커 위치로 이동
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.position, mMap.cameraPosition.zoom)
-            // 애니메이션 시간을 줄이기 (예: 150ms)
-            mMap.animateCamera(cameraUpdate, 200, object : GoogleMap.CancelableCallback {
+            mMap.animateCamera(cameraUpdate, 300, object : GoogleMap.CancelableCallback {
                 override fun onFinish() {
-                    // 커스텀 다이얼로그 생성 및 표시
-                    val dialogFragment = PostDetailsDialogFragment()
-                    dialogFragment.show(parentFragmentManager, dialogFragment.tag)
+                    // 마커의 태그(ID)를 사용하여 상세 정보 가져오기
+                    val postId = marker.tag.toString().toLongOrNull()
+//                    Log.d("PostDetails", "postID: $postId")
+//                    Log.d("PostDetails", "marker tag: ${marker.tag}")
+                    postId?.let {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val response = RetrofitService.apiService.getPostDetailsById(it)
+                            withContext(Dispatchers.Main) {
+                                if (response.isSuccessful) {
+                                    val post = response.body()
+                                    Log.d("PostDetails", "Response received: $post")
+                                    post?.let { postDetails ->
+                                        val dialogFragment = PostDetailsDialogFragment()
+                                        dialogFragment.setMarkerDetails(postDetails)
+                                        dialogFragment.show(parentFragmentManager, dialogFragment.tag)
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Failed to load post details", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
                 }
 
                 override fun onCancel() {
-                    // 이동 취소 시 할 작업 (여기서는 아무것도 하지 않음)
+                    // 이동 취소 시 할 작업
+                    Log.d("PostDetails", "Nothing Happend ----- Sadly")
                 }
             })
             true
@@ -160,7 +178,9 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                     posts.forEach { post ->
                         val postLocation = LatLng(post.latitude, post.longitude)
                         val markerOptions = createMarkerOptions(postLocation, post.content)
-                        mMap.addMarker(markerOptions)
+                        val marker = mMap.addMarker(markerOptions)
+                        marker?.tag = post.id.toString() // Post의 ID를 마커의 태그로 설정
+                        Log.d("PostDetails", "Here is ur post id --> $post")
                     }
                 }
             }

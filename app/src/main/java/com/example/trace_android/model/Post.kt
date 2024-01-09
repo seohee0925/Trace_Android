@@ -16,7 +16,7 @@ data class PostResponse(
 
 // 서버에서 반환되는 포스트 데이터의 구조를 나타내는 클래스
 data class Post(
-    val id: Int,                        //포스팅의 id
+    val id: Long,                        //포스팅의 id
     val email: String,                  //작성자의 Email
     val content: String,
     val latitude: Double,
