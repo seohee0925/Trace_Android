@@ -3,6 +3,7 @@ package com.example.trace_android
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -25,8 +26,9 @@ class PostAdapter(private val items: ArrayList<PostData>) : RecyclerView.Adapter
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
-        private val contentTextView: TextView = v.findViewById(R.id.content)
-        private val placeTextView: TextView = v.findViewById(R.id.place)
+        val contentTextView: TextView = v.findViewById(R.id.content)
+        val placeTextView: TextView = v.findViewById(R.id.place)
+        // val imageView: ImageView = v.findViewById(R.id.contentImage)
 
         fun bind(item: PostData) {
             contentTextView.text = item.content

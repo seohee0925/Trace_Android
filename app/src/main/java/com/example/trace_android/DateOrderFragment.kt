@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trace_android.API.MemberAPI
 import com.example.trace_android.model.Member
+import com.example.trace_android.model.Post
 import com.example.trace_android.retrofit.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,9 +20,10 @@ import retrofit2.Response
 
 class DateOrderFragment : Fragment() {
     private var userEmail: String? = null
-    private var userName: String? = null
+    private var content: String? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
+    val postDataList = ArrayList<PostData>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,17 +36,36 @@ class DateOrderFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // 어댑터 초기화
-        val postDataList = ArrayList<PostData>()
         postAdapter = PostAdapter(postDataList)
         recyclerView.adapter = postAdapter
 
-        val postData1 = PostData("hi", "place")
-        postDataList.add(postData1)
+        userEmail = activity?.intent?.getStringExtra("user_email")
+        Log.d("DateOrderFragment", "User Email: $userEmail")
 
-        val postData2 = PostData("hi", "Content 2")
-        postDataList.add(postData2)
+        userEmail?.let {
+            val memberAPI = RetrofitService.retrofit.create(MemberAPI::class.java)
+            memberAPI.getPostsByEmail(it).enqueue(object : Callback<List<Post>> {
+                override fun onResponse(
+                    call: Call<List<Post>>,
+                    response: Response<List<Post>>
+                ) {
+                    val userList = response.body()
+                    userList?.let {
+                        for (member in it) {
+                            val memberContent = member.content
+                            Log.d("seohee", "Member Content: $memberContent")
+                            postDataList.add(PostData(memberContent, "서울"))
+                        }
+                        postAdapter.notifyDataSetChanged()
+                    }
+                }
 
-        postAdapter.notifyDataSetChanged()
+                override fun onFailure(call: Call<List<Post>>, t: Throwable) {
+
+                }
+            })
+        }
+
         return view
     }
 }
