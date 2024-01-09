@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -118,7 +119,11 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                             // 맵에 포스트 마커 추가
                             posts.forEach { post ->
                                 val postLocation = LatLng(post.latitude, post.longitude)
-                                mMap.addMarker(MarkerOptions().position(postLocation).title(post.content))
+                                val markerOptions = MarkerOptions()
+                                    .position(postLocation)
+                                    .title(post.content)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_activated)) // 사용자 정의 마커 아이콘 사용
+                                mMap.addMarker(markerOptions)
                             }
                         }
                     } else {
