@@ -51,6 +51,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private var originalContainerY: Float = 0f // 컨테이너의 원래 Y 좌표, 키보드 여닫음에 따라 버튼 위치를 바꾸기 위해 사용
     private val geocodingRepository = GeocodingRepository(RetrofitService.geocodingService) //지오코딩을 위한 선언
 
+    private var userAddress: String? = null
     private var userEmail: String? = null
     private var imageBase64: String? = null
     private var imageExtraBase64: String? = null
@@ -61,6 +62,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val address = geocodingRepository.getFormattedAddress(location)
+                userAddress = address
                 address?.let {
                     view?.findViewById<TextView>(R.id.textViewAddress)?.text = it
                 } ?: run {
@@ -108,7 +110,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 userLocation?.longitude ?: 0.0,
                 email ?: "",
                 imageBase64 ?: "",
-                imageExtraBase64
+                imageExtraBase64,
+                userAddress ?: ""
             )
 
             CoroutineScope(Dispatchers.IO).launch {

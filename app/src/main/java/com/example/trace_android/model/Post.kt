@@ -6,7 +6,8 @@ data class PostRequest(
     val longitude: Double,
     val email: String,
     val image: String, // 첫 번째 부분의 Base64 인코딩된 이미지 데이터
-    val imageExtra: String? = null // 추가 이미지 데이터 (필요한 경우)
+    val imageExtra: String? = null, // 추가 이미지 데이터
+    val address: String                 // 주소 필드 추가
 )
 
 data class PostResponse(
@@ -21,6 +22,6 @@ data class Post(
     val latitude: Double,
     val longitude: Double,
     val image: String,                  // 첫 번째 부분의 Base64 인코딩된 이미지 데이터
-    val imageExtra: String?      // 추가 이미지 데이터 (필요한 경우)
-    // 기타 필요한 필드들...
+    val imageExtra: String?,             // 추가 이미지 데이터
+    val address: String                 // 주소 필드 추가
 )
