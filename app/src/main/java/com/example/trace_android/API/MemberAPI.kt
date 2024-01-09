@@ -13,4 +13,7 @@ interface MemberAPI {
 
     @GET("/members/{memberEmail}")
     fun getMemberByEmail(@Path("memberEmail") memberEmail: String): Call<Member>
+
+    @GET("/posts/{memberEmail}")
+    fun getPostsByEmail(@Path("memberEmail") memberEmail: String): Call<List<Member>>
 }
