@@ -1,6 +1,7 @@
 package com.example.trace_android.API
 
 import com.example.trace_android.model.Member
+import com.example.trace_android.model.Post
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,4 +14,7 @@ interface MemberAPI {
 
     @GET("/members/{memberEmail}")
     fun getMemberByEmail(@Path("memberEmail") memberEmail: String): Call<Member>
+
+    @GET("/posts/{memberEmail}")
+    fun getPostsByEmail(@Path("memberEmail") memberEmail: String): Call<List<Post>>
 }
