@@ -123,7 +123,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                     val response = RetrofitService.apiService.createPost(postRequest) // 수정된 접근 방식
                     withContext(Dispatchers.Main) {
                         // 성공 처리:  예를 들어 토스트 메시지 표시
-                        Toast.makeText(context, email.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Succefully uploaded", Toast.LENGTH_SHORT).show()
                         dismiss()
                     }
                 } catch (e: Exception) {
