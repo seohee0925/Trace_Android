@@ -36,6 +36,8 @@ class MypageFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         viewPager = view.findViewById(R.id.viewPager)
 
+        viewPager.isSaveEnabled = false;
+
         mypageAdapter = MypageAdapter(childFragmentManager, tabLayout.tabCount)
         viewPager.adapter = mypageAdapter
         viewPager.currentItem = tabCurrentIdx
