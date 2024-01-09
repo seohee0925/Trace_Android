@@ -8,9 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.example.trace_android.API.MemberAPI
 import com.example.trace_android.model.Member
 import com.example.trace_android.retrofit.RetrofitService.retrofit
+import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +22,37 @@ import retrofit2.Response
 class MypageFragment : Fragment() {
     private var userEmail: String? = null
     private var userName: String? = null
+    private lateinit var mypageAdapter:MypageAdapter
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager
+    private var tabCurrentIdx = 0
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_mypage, container, false)
+
+        tabLayout = view.findViewById(R.id.tabLayout)
+        viewPager = view.findViewById(R.id.viewPager)
+
+        mypageAdapter = MypageAdapter(childFragmentManager, tabLayout.tabCount)
+        viewPager.adapter = mypageAdapter
+        viewPager.currentItem = tabCurrentIdx
+
+        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewPager.currentItem = tab.position
+                tabCurrentIdx = tab.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+        return view
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +79,6 @@ class MypageFragment : Fragment() {
                 }
             })
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_mypage, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

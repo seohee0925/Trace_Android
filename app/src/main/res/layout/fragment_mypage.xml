@@ -69,12 +69,9 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <!-- 카드 목록 섹션 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
