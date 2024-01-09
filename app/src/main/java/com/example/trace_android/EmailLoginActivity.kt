@@ -31,7 +31,7 @@ class EmailLoginActivity : AppCompatActivity() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 login(email, password)
             } else {
-                Toast.makeText(this, "이메일과 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter e-mail and password", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -64,13 +64,13 @@ class EmailLoginActivity : AppCompatActivity() {
                         finish()
                     }
                 } else {
-                    Toast.makeText(this@EmailLoginActivity, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EmailLoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Member>, t: Throwable) {
                 // Handle network errors
-                Toast.makeText(this@EmailLoginActivity, "네트워크 오류입니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EmailLoginActivity, "Network error, please try again", Toast.LENGTH_SHORT).show()
             }
         })
     }

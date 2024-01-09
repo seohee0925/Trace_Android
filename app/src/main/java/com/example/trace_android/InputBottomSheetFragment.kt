@@ -35,8 +35,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import android.util.Base64
-import android.util.Log
 import com.example.trace_android.retrofit.GeocodingRepository
+import java.util.Calendar
+import java.util.Date
 
 
 /**
@@ -55,6 +56,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private var userEmail: String? = null
     private var imageBase64: String? = null
     private var imageExtraBase64: String? = null
+    private var date:Date? = null
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -104,6 +106,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 encodeBitmapToBase64(loadBitmapFromUri(Uri.parse(it)))
             } ?: Pair("", null)
 
+
             val postRequest = PostRequest(
                 content,
                 userLocation?.latitude ?: 0.0,
@@ -111,7 +114,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 email ?: "",
                 imageBase64 ?: "",
                 imageExtraBase64,
-                userAddress ?: ""
+                userAddress ?: "",
+                date ?: Date()
             )
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -119,7 +123,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                     val response = RetrofitService.apiService.createPost(postRequest) // 수정된 접근 방식
                     withContext(Dispatchers.Main) {
                         // 성공 처리:  예를 들어 토스트 메시지 표시
-                        Toast.makeText(context, email.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Succefully uploaded", Toast.LENGTH_SHORT).show()
                         dismiss()
                     }
                 } catch (e: Exception) {

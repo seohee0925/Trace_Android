@@ -9,6 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class PostAdapter(private val items: ArrayList<PostData>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,7 +41,10 @@ class PostAdapter(private val items: ArrayList<PostData>) : RecyclerView.Adapter
         fun bind(item: PostData) {
             contentTextView.text = item.content
             placeTextView.text = item.place
-            dateTextView.text = item.date
+
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(item.date)
+            dateTextView.text = formattedDate
 
             // base64 문자열을 디코딩하여 이미지뷰에 설정
             val decodedImageBytes: ByteArray = android.util.Base64.decode(item.combinedImage, android.util.Base64.DEFAULT)

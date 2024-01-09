@@ -8,7 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitService { // 싱글톤 객체로 변경
 
     val retrofit: Retrofit by lazy {
-        val gson = GsonBuilder().setLenient().create()
+        // val gson = GsonBuilder().setLenient().create()
+
+        val gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd")
+            .create()
+
         Retrofit.Builder()
             //.baseUrl("http://143.248.225.134:8080")   // 서희
             .baseUrl("http://143.248.218.51:8080")      // 재용

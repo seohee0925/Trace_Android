@@ -33,17 +33,19 @@
             android:paddingStart="16dp">
 
             <TextView
-                android:id="@+id/userId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:theme="@style/RegularFont"/>
-
-            <TextView
                 android:id="@+id/userName"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:theme="@style/RegularFont"/>
+
+            <TextView
+                android:id="@+id/userId"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:theme="@style/RegularFont"/>
         </LinearLayout>
     </LinearLayout>
