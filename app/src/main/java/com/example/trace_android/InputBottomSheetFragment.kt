@@ -35,7 +35,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import android.util.Base64
+import com.example.trace_android.API.MemberAPI
+import com.example.trace_android.model.Member
 import com.example.trace_android.retrofit.GeocodingRepository
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.Calendar
 import java.util.Date
 
@@ -57,6 +62,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     private var imageBase64: String? = null
     private var imageExtraBase64: String? = null
     private var date:Date? = null
+    private var userName:String? = null
 
     // 위치 데이터를 설정하는 메서드
     fun setLocation(location: LatLng) {
@@ -82,12 +88,26 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // 바텀 시트의 레이아웃을 인플레이트합니다.
         val view = inflater.inflate(R.layout.fragment_input_bottom_sheet, container, false)
 
         editTextUserInput = view.findViewById<EditText>(R.id.editTextUserInput)
 
         userEmail = activity?.intent?.getStringExtra("user_email")
+
+        userEmail?.let {
+            val memberAPI = RetrofitService.retrofit.create(MemberAPI::class.java)
+            memberAPI.getMemberByEmail(it).enqueue(object : Callback<Member> {
+                override fun onResponse(call: Call<Member>, response: Response<Member>) {
+                    if (response.isSuccessful) {
+                        val user = response.body()
+                        userName = user?.name // 사용자 이름 설정
+                    }
+                }
+
+                override fun onFailure(call: Call<Member>, t: Throwable) {
+                }
+            })
+        }
 
         val sharedPreferences = activity?.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences?.edit()
@@ -115,7 +135,8 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
                 imageBase64 ?: "",
                 imageExtraBase64,
                 userAddress ?: "",
-                date ?: Date()
+                date ?: Date(),
+                userName ?: ""
             )
 
             CoroutineScope(Dispatchers.IO).launch {
