@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import android.widget.Toast
 import com.example.trace_android.retrofit.RetrofitService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -81,6 +83,43 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
         mapReady = true
         setMapStyle()
         enableMyLocation()
+
+        mMap.setOnMarkerClickListener { marker ->
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.position, mMap.cameraPosition.zoom)
+            mMap.animateCamera(cameraUpdate, 300, object : GoogleMap.CancelableCallback {
+                override fun onFinish() {
+                    // 마커의 태그(ID)를 사용하여 상세 정보 가져오기
+                    val postId = marker.tag.toString().toLongOrNull()
+//                    Log.d("PostDetails", "postID: $postId")
+//                    Log.d("PostDetails", "marker tag: ${marker.tag}")
+                    postId?.let {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val response = RetrofitService.apiService.getPostDetailsById(it)
+                            withContext(Dispatchers.Main) {
+                                if (response.isSuccessful) {
+                                    val post = response.body()
+                                    Log.d("PostDetails", "Response received: $post")
+                                    post?.let { postDetails ->
+                                        val dialogFragment = PostDetailsDialogFragment()
+                                        dialogFragment.setMarkerDetails(postDetails)
+                                        dialogFragment.show(parentFragmentManager, dialogFragment.tag)
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Failed to load post details", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancel() {
+                    // 이동 취소 시 할 작업
+                    Log.d("PostDetails", "Nothing Happend ----- Sadly")
+                }
+            })
+            true
+        }
+
     }
 
     // 현재 위치 활성화 및 마커 업데이트
@@ -139,7 +178,9 @@ class FeedFragment : Fragment(), OnMapReadyCallback {
                     posts.forEach { post ->
                         val postLocation = LatLng(post.latitude, post.longitude)
                         val markerOptions = createMarkerOptions(postLocation, post.content)
-                        mMap.addMarker(markerOptions)
+                        val marker = mMap.addMarker(markerOptions)
+                        marker?.tag = post.id.toString() // Post의 ID를 마커의 태그로 설정
+                        Log.d("PostDetails", "Here is ur post id --> $post")
                     }
                 }
             }

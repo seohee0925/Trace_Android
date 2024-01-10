@@ -7,6 +7,7 @@ import retrofit2.Response
 import retrofit2.http.POST
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -24,4 +25,9 @@ interface ApiService {
         @Query("northEastLng") northEastLng: Double
     ): Response<List<Post>>
 
+    // 포스트 id를 이용해서 포스트의 다른 정보들을 가져옴
+    @GET("/posts/byId/{id}")
+    suspend fun getPostDetailsById(
+        @Path("id") postId: Long
+    ): Response<Post>
 }
