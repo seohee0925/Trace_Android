@@ -294,7 +294,7 @@ class InputBottomSheetFragment : BottomSheetDialogFragment() {
     // Bitmap을 Base64 문자열로 인코딩하는 함수
     private fun encodeBitmapToBase64(bitmap: Bitmap): Pair<String, String?> {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
         val byteArray = outputStream.toByteArray()
         val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
 

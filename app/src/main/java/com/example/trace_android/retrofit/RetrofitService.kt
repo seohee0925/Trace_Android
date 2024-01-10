@@ -16,7 +16,7 @@ object RetrofitService { // 싱글톤 객체로 변경
 
         Retrofit.Builder()
             //.baseUrl("http://143.248.225.134:8080")   // 서희
-            .baseUrl("http://143.248.218.51:8080")      // 재용
+            .baseUrl("http://143.248.218.51:8080")    // 재용
             //.baseUrl("http://172.10.7.70:80")         // VM
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
