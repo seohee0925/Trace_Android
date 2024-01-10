@@ -5,10 +5,17 @@ import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.trace_android.API.ApiService
+import com.example.trace_android.retrofit.RetrofitService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -31,12 +38,37 @@ class PostAdapter(private val items: ArrayList<PostData>) : RecyclerView.Adapter
     }
 
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
         val contentTextView: TextView = v.findViewById(R.id.content)
         val placeTextView: TextView = v.findViewById(R.id.place)
         val dateTextView: TextView = v.findViewById(R.id.date)
         val imageView: ImageView = v.findViewById(R.id.contentImage)
+        val deleteBtn: ImageButton = v.findViewById(R.id.delete_btn)
+
+        init {
+            deleteBtn.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val postId = items[position].id // 포스트의 ID 가져오기
+
+                    val apiService = RetrofitService.retrofit.create(ApiService::class.java)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val response = apiService.deletePost(postId)
+                            if (response.isSuccessful) {
+                                withContext(Dispatchers.Main) {
+                                    items.removeAt(position)
+                                    notifyItemRemoved(position)
+                                }
+                            } else {
+                            }
+                        } catch (e: Exception) {
+                        }
+                    }
+                }
+            }
+        }
 
         fun bind(item: PostData) {
             contentTextView.text = item.content

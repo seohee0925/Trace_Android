@@ -79,7 +79,8 @@
                 android:visibility="gone"
                 android:contentDescription="@string/selected_image_description"
                 android:adjustViewBounds="true"
-                android:scaleType="fitStart"/>
+                android:scaleType="fitStart"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/postViewContents"

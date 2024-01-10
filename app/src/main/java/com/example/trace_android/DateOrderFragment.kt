@@ -48,14 +48,15 @@ class DateOrderFragment : Fragment() {
                     val userList = response.body()
 
                     userList?.let {
-                        val sortedList = it.sortedByDescending { member -> member.createdDate }
-                        for (member in sortedList) {
+                        for (member in it) {
                             val memberContent = member.content
                             val combinedImage = "${member.image}${member.imageExtra}"
                             val place = member.address
                             val date = member.createdDate
+                            val id = member.id
 
-                            postDataList.add(PostData(combinedImage, memberContent, place, date))
+                            postDataList.add(0, PostData(id, combinedImage, memberContent, place, date))
+                            Log.d("DateOrderFragment", "PostDataList: $postDataList")
                         }
                         postAdapter.notifyDataSetChanged()
                     }
@@ -67,7 +68,6 @@ class DateOrderFragment : Fragment() {
                 }
             })
         }
-
         return view
     }
 }

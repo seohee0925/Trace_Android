@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +13,19 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import com.example.trace_android.API.MemberAPI
+import com.example.trace_android.model.Member
 import com.example.trace_android.model.Post
-
+import com.example.trace_android.retrofit.RetrofitService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class PostDetailsDialogFragment : DialogFragment() {
     private var post: Post? = null
+    private var userEmail: String? = null
+    private var userName: String? = null
 
     fun setMarkerDetails(post: Post) {
         this.post = post
@@ -39,6 +47,34 @@ class PostDetailsDialogFragment : DialogFragment() {
 
         // 주소 표시
         view.findViewById<TextView>(R.id.postViewAddress).text = post?.address
+
+        // 이름 표시
+        val nameTextView = view.findViewById<TextView>(R.id.textViewAddMyTrace)
+
+        userEmail = activity?.intent?.getStringExtra("user_email")
+
+        // MemberAPI를 사용하여 사용자 이름 가져오기
+        userEmail?.let {
+            val memberAPI = RetrofitService.retrofit.create(MemberAPI::class.java)
+            memberAPI.getMemberByEmail(it).enqueue(object : Callback<Member> {
+                override fun onResponse(call: Call<Member>, response: Response<Member>) {
+                    if (response.isSuccessful) {
+                        val user = response.body()
+                        userName = user?.name // 사용자 이름 설정
+
+                        userName?.let {
+                            view?.findViewById<TextView>(R.id.userName)?.text = it
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Member>, t: Throwable) {
+                }
+            })
+        }
+
+        nameTextView.text = "${userName}'s trace"
+        Log.d("PostDetail", "User Email: $userEmail")
 
         // 이미지 처리
         val imageView = view.findViewById<ImageView>(R.id.postViewImage)
