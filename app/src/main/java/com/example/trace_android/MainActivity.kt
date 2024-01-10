@@ -2,6 +2,7 @@ package com.example.trace_android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.fragment_container, feedFragment).commit()
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view)
+        val colorStateList = ContextCompat.getColorStateList(this, R.color.bottom_nav_colors)
+        bottomNavigationView.itemIconTintList = colorStateList
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             val fragmentTransaction = fragmentManager.beginTransaction()
 

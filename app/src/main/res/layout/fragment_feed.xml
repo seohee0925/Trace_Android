@@ -20,7 +20,14 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/fab_my_location_description"
+        android:paddingTop="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+
         app:backgroundTint="@color/black"
+        app:srcCompat="@drawable/ic_myspot"
+        app:tint="@color/white"
         android:theme="@style/RegularFont"
         />
 
@@ -31,9 +38,11 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="@dimen/fab_margin"
         android:text="@string/fab_add_trace"
+        android:textStyle="bold"
+        android:fontFamily="@font/redhatmono_semibold"
         android:textColor="@color/black"
         android:contentDescription="@string/fab_add_trace_description"
         app:backgroundTint="@color/primary_highlight"
-        android:theme="@style/RegularFont"/>
+        />
 
 </FrameLayout>

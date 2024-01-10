@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Trace_Android</string>
+    <string name="app_name">Trace</string>
 
-    <string name="tab1">Feed</string>
-    <string name="tab2">My page</string>
+    <string name="tab1">Discover</string>
+    <string name="tab2">My Trace</string>
 
     <string name="map_style">
         [
