@@ -24,7 +24,6 @@ import retrofit2.Response
 
 class PostDetailsDialogFragment : DialogFragment() {
     private var post: Post? = null
-    private var userEmail: String? = null
     private var userName: String? = null
 
     fun setMarkerDetails(post: Post) {
@@ -49,32 +48,8 @@ class PostDetailsDialogFragment : DialogFragment() {
         view.findViewById<TextView>(R.id.postViewAddress).text = post?.address
 
         // 이름 표시
-        val nameTextView = view.findViewById<TextView>(R.id.textViewAddMyTrace)
-
-        userEmail = activity?.intent?.getStringExtra("user_email")
-
-        // MemberAPI를 사용하여 사용자 이름 가져오기
-        userEmail?.let {
-            val memberAPI = RetrofitService.retrofit.create(MemberAPI::class.java)
-            memberAPI.getMemberByEmail(it).enqueue(object : Callback<Member> {
-                override fun onResponse(call: Call<Member>, response: Response<Member>) {
-                    if (response.isSuccessful) {
-                        val user = response.body()
-                        userName = user?.name // 사용자 이름 설정
-
-                        userName?.let {
-                            view?.findViewById<TextView>(R.id.userName)?.text = it
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Member>, t: Throwable) {
-                }
-            })
-        }
-
-        nameTextView.text = "${userName}'s trace"
-        Log.d("PostDetail", "User Email: $userEmail")
+        val traceName = view.findViewById<TextView>(R.id.textViewAddMyTrace)
+        traceName.text = "${post?.name}'s trace"
 
         // 이미지 처리
         val imageView = view.findViewById<ImageView>(R.id.postViewImage)
