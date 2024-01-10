@@ -34,8 +34,13 @@ class PostDetailsDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // 내용 표시
         view.findViewById<TextView>(R.id.postViewContents).text = post?.content
 
+        // 주소 표시
+        view.findViewById<TextView>(R.id.postViewAddress).text = post?.address
+
+        // 이미지 처리
         val imageView = view.findViewById<ImageView>(R.id.postViewImage)
         post?.let {
             if (!it.image.isNullOrEmpty() || !it.imageExtra.isNullOrEmpty()) {
