@@ -22,7 +22,7 @@
             android:src="@drawable/ic_profile_placeholder"
             android:background="@drawable/rounded_imageview_background"
             android:scaleType="centerCrop"
-            app:tint="@color/black" />
+            />
 
 
         <LinearLayout
