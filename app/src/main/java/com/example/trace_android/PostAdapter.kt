@@ -1,7 +1,9 @@
 package com.example.trace_android
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.trace_android.API.ApiService
 import com.example.trace_android.retrofit.RetrofitService
 import kotlinx.coroutines.CoroutineScope
@@ -78,11 +79,22 @@ class PostAdapter(private val items: ArrayList<PostData>) : RecyclerView.Adapter
             val formattedDate = dateFormat.format(item.date)
             dateTextView.text = formattedDate
 
-            // base64 문자열을 디코딩하여 이미지뷰에 설정
-            val decodedImageBytes: ByteArray = android.util.Base64.decode(item.combinedImage, android.util.Base64.DEFAULT)
-            val decodedBitmap: Bitmap? = BitmapFactory.decodeByteArray(decodedImageBytes, 0, decodedImageBytes.size)
-
-            imageView.setImageBitmap(decodedBitmap)
+            if (item.combinedImage.isNotEmpty() && item.combinedImage != "null") {
+                // 이미지가 있는 경우: 이미지를 디코딩하여 표시하고 높이를 200dp로 설정
+                val decodedImageBytes: ByteArray = android.util.Base64.decode(item.combinedImage, android.util.Base64.DEFAULT)
+                val decodedBitmap: Bitmap? = BitmapFactory.decodeByteArray(decodedImageBytes, 0, decodedImageBytes.size)
+                imageView.setImageBitmap(decodedBitmap)
+                imageView.layoutParams.height = dpToPx(200, imageView.context)
+                imageView.visibility = View.VISIBLE
+            } else {
+                // 이미지가 없는 경우: ImageView 숨기기 및 높이를 wrap_content로 설정
+                imageView.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                imageView.visibility = View.GONE
+            }
+        }
+        // dp를 픽셀로 변환하는 함수
+        private fun dpToPx(dp: Int, context: Context): Int {
+            return (dp * context.resources.displayMetrics.density).toInt()
         }
     }
 }
