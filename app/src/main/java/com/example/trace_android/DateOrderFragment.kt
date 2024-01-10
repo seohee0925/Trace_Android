@@ -54,8 +54,9 @@ class DateOrderFragment : Fragment() {
                             val combinedImage = "${member.image}${member.imageExtra}"
                             val place = member.address
                             val date = member.createdDate
+                            val id = member.id
 
-                            postDataList.add(PostData(combinedImage, memberContent, place, date))
+                            postDataList.add(0, PostData(id, combinedImage, memberContent, place, date))
                         }
                         postAdapter.notifyDataSetChanged()
                     }
