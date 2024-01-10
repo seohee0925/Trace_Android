@@ -50,7 +50,6 @@ class CalendarFragment : Fragment() {
 
         userEmail = activity?.intent?.getStringExtra("user_email")
 
-        // 초기 데이터 가져오기
         fetchDataForSelectedDate()
 
         return view
@@ -70,6 +69,7 @@ class CalendarFragment : Fragment() {
                     userList?.let {
                         postDataList.clear() // 기존 데이터 클리어
                         for (member in it) {
+                            val id = member.id
                             val memberContent = member.content
                             val combinedImage = "${member.image}${member.imageExtra}"
                             val place = member.address
@@ -83,7 +83,7 @@ class CalendarFragment : Fragment() {
                                 selectedDate.get(Calendar.MONTH) == postDate.get(Calendar.MONTH) &&
                                 selectedDate.get(Calendar.DAY_OF_MONTH) == postDate.get(Calendar.DAY_OF_MONTH)
                             ) {
-                                postDataList.add(PostData(combinedImage, memberContent, place, date))
+                                postDataList.add(0, PostData(id, combinedImage, memberContent, place, date))
                             }
                         }
                         postAdapter.notifyDataSetChanged()

@@ -6,6 +6,7 @@ import com.example.trace_android.model.PostResponse
 import retrofit2.Response
 import retrofit2.http.POST
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -30,4 +31,9 @@ interface ApiService {
     suspend fun getPostDetailsById(
         @Path("id") postId: Long
     ): Response<Post>
+
+    @DELETE("/posts/delete/{id}")
+    suspend fun deletePost(
+        @Path("id") postId: Long
+    ): Response<Void>
 }

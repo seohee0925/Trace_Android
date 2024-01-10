@@ -54,7 +54,7 @@
             android:layout_height="40dp"
             android:text="Logout"/>
     </LinearLayout>
-    
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         style="@style/Widget.Trace_Android.TabLayout"
