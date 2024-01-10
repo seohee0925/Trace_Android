@@ -10,7 +10,8 @@ data class PostRequest(
     val image: String, // 첫 번째 부분의 Base64 인코딩된 이미지 데이터
     val imageExtra: String? = null, // 추가 이미지 데이터
     val address: String,                 // 주소 필드 추가
-    val createdDate: Date
+    val createdDate: Date,
+    val name: String
 )
 
 data class PostResponse(
@@ -21,6 +22,7 @@ data class PostResponse(
 data class Post(
     val id: Long,                        //포스팅의 id
     val email: String,                  //작성자의 Email
+    val name: String,
     val content: String,
     val latitude: Double,
     val longitude: Double,
