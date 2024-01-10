@@ -46,17 +46,20 @@ class DateOrderFragment : Fragment() {
                     response: Response<List<Post>>
                 ) {
                     val userList = response.body()
+
                     userList?.let {
-                        for (member in it) {
+                        val sortedList = it.sortedByDescending { member -> member.createdDate }
+                        for (member in sortedList) {
                             val memberContent = member.content
                             val combinedImage = "${member.image}${member.imageExtra}"
                             val place = member.address
                             val date = member.createdDate
 
-                            postDataList.add(0, PostData(combinedImage, memberContent, place, date))
+                            postDataList.add(PostData(combinedImage, memberContent, place, date))
                         }
                         postAdapter.notifyDataSetChanged()
                     }
+
                 }
 
                 override fun onFailure(call: Call<List<Post>>, t: Throwable) {
