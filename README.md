@@ -23,7 +23,6 @@
 
 ### 1️⃣ Sign up, Login
 ![Screen_Recording_20240110_191512_Trace](https://github.com/seohee0925/Trace_Android/assets/102652293/9bf3538c-1854-4f68-a725-6918fc7e2784) <br/>
-![image](https://github.com/seohee0925/Trace_Android/assets/102652293/12db97ab-cae2-4b87-a049-042699bed53b)
 
 **주요 기능**
 - 이메일과 비밀번호, 이름을 통해 자체 회원가입, 로그인
@@ -35,6 +34,11 @@
 - 네이버 아이디로 가입할 경우 별도의 로그인 절차 없이 바로 메인페이지로 이동합니다.
 
 ### 2️⃣ Main Page
+<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/efb8fef2-3caf-44a4-989c-44f956ac501c" width="300" height="700" />
+<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/7746edef-2d4c-4d3b-9c4a-f5c245e8d190" width="300" height="700" />
+<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/2f6c6988-6a79-41a6-8de3-c23067c2bb3c" width="300" height="700" />
+
+
 **주요 기능**
 - 현재 위치와 사진, 본문을 포스팅합니다.
 - 지도 내에 나와 다른 사람들이 저장한 포스팅들이 마커로 표시되며,
@@ -53,6 +57,10 @@
 - 다른 탭으로 넘어가면 (화면에 지도가 표출되지 않으면) 리소스 소모를 막기 위해 지도 **업데이트를 중지**하고, 다시 지도로 돌아오면 **좌표를 업데이트**합니다.
 
 ### 3️⃣ My Page
+![마이페이지_1](https://github.com/seohee0925/Trace_Android/assets/102652293/a62d0fab-5410-4379-8c3d-0c6123ba0e39)
+![마이페이지_2](https://github.com/seohee0925/Trace_Android/assets/102652293/9a82b797-4aa5-43ba-ad01-dde030603206)
+
+
 **주요 기능**
 - 사용자가 작성한 글들을 최신순으로 볼 수 있습니다.
 - 캘린더를 통해 날짜를 선택함에 따라 그 당일에 작성한 게시물들을 보여줍니다.
