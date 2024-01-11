@@ -34,9 +34,9 @@
 - 네이버 아이디로 가입할 경우 별도의 로그인 절차 없이 바로 메인페이지로 이동합니다.
 
 ### 2️⃣ Main Page
-<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/efb8fef2-3caf-44a4-989c-44f956ac501c" width="300" height="700" />
-<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/7746edef-2d4c-4d3b-9c4a-f5c245e8d190" width="300" height="700" />
-<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/2f6c6988-6a79-41a6-8de3-c23067c2bb3c" width="300" height="700" />
+<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/efb8fef2-3caf-44a4-989c-44f956ac501c" width="250" height="600" />
+<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/7746edef-2d4c-4d3b-9c4a-f5c245e8d190" width="250" height="600" />
+<img src="https://github.com/seohee0925/Trace_Android/assets/102652293/2f6c6988-6a79-41a6-8de3-c23067c2bb3c" width="250" height="600" />
 
 
 **주요 기능**
